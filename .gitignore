@@ -1,4 +1,4 @@
-# Node modules
+# Node modules (dependencies)
 node_modules/
 
 # Build output
@@ -10,6 +10,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+*.log
 
 # OS-specific files
 .DS_Store
@@ -23,14 +24,14 @@ Thumbs.db
 # SQLite database
 server/database.sqlite
 
-# Sensitive service files
+# Sensitive service files (tokens, credentials)
 server/services/token.json
 server/services/credentials.json
 
 # Vite cache
 .vite/
 
-# IDE/editor settings
+# Editor/IDE settings
 .vscode/
 .idea/
 *.swp
@@ -38,5 +39,9 @@ server/services/credentials.json
 # Coverage reports
 coverage/
 
-# Misc
-*.log
+# Miscellaneous
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
