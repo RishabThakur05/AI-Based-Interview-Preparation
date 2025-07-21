@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -8,6 +8,32 @@ const Layout = ({ children }) => {
   const { user, logout } = useAuth();
   const { isDarkMode, toggleDarkMode } = useTheme();
   const location = useLocation();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const navLinks = user ? (
+    <ul className="nav-links">
+      <li>
+        <Link to="/dashboard" className={location.pathname === '/dashboard' ? 'active' : ''} onClick={() => setDrawerOpen(false)}>
+          <Home className="w-4 h-4" /> Dashboard
+        </Link>
+      </li>
+      <li>
+        <Link to="/interview" className={location.pathname === '/interview' ? 'active' : ''} onClick={() => setDrawerOpen(false)}>
+          <Brain className="w-4 h-4" /> Interview
+        </Link>
+      </li>
+      <li>
+        <Link to="/schedule" className={location.pathname === '/schedule' ? 'active' : ''} onClick={() => setDrawerOpen(false)}>
+          <Calendar className="w-4 h-4" /> Schedule
+        </Link>
+      </li>
+      <li>
+        <Link to="/profile" className={location.pathname === '/profile' ? 'active' : ''} onClick={() => setDrawerOpen(false)}>
+          <User className="w-4 h-4" /> Profile
+        </Link>
+      </li>
+    </ul>
+  ) : null;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -15,39 +41,19 @@ const Layout = ({ children }) => {
         <div className="container">
           <div className="navbar-content">
             <Link to="/" className="logo">
-              <Brain className="w-6 h-6" />
-              InterviewAI
+              <Brain className="w-6 h-6" /> InterviewAI
             </Link>
-            
-            {user && (
-              <ul className="nav-links">
-                <li>
-                  <Link to="/dashboard" className={location.pathname === '/dashboard' ? 'active' : ''}>
-                    <Home className="w-4 h-4" />
-                    Dashboard
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/interview" className={location.pathname === '/interview' ? 'active' : ''}>
-                    <Brain className="w-4 h-4" />
-                    Interview
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/schedule" className={location.pathname === '/schedule' ? 'active' : ''}>
-                    <Calendar className="w-4 h-4" />
-                    Schedule
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/profile" className={location.pathname === '/profile' ? 'active' : ''}>
-                    <User className="w-4 h-4" />
-                    Profile
-                  </Link>
-                </li>
-              </ul>
-            )}
-            
+
+            {/* Hamburger for mobile */}
+            <button className="navbar-hamburger" onClick={() => setDrawerOpen(true)} aria-label="Open menu">
+              <span className="hamburger-bar"></span>
+              <span className="hamburger-bar"></span>
+              <span className="hamburger-bar"></span>
+            </button>
+
+            {/* Regular nav links (hidden on mobile) */}
+            <div className="navbar-links-desktop">{navLinks}</div>
+
             <div className="nav-actions">
               {user ? (
                 <div className="flex items-center gap-4">
@@ -60,8 +66,7 @@ const Layout = ({ children }) => {
                   </button>
                   <span className="text-sm text-gray-600">Welcome, {user.username}!</span>
                   <button onClick={logout} className="btn btn-outline">
-                    <LogOut className="w-4 h-4" />
-                    Logout
+                    <LogOut className="w-4 h-4" /> Logout
                   </button>
                 </div>
               ) : (
@@ -80,8 +85,14 @@ const Layout = ({ children }) => {
             </div>
           </div>
         </div>
+        {/* Drawer overlay */}
+        {drawerOpen && <div className="drawer-overlay" onClick={() => setDrawerOpen(false)}></div>}
+        {/* Drawer panel */}
+        <div className={`drawer-panel${drawerOpen ? ' open' : ''}`}>
+          <button className="drawer-close" onClick={() => setDrawerOpen(false)} aria-label="Close menu">&times;</button>
+          {navLinks}
+        </div>
       </nav>
-      
       <main className="container py-8">
         {children}
       </main>
@@ -90,17 +101,17 @@ const Layout = ({ children }) => {
           <div>
             <h3>Features</h3>
             <ul>
-              <li><a href="/interview">Mock Interviews</a></li>
-              <li><a href="/live-coding">Live Coding Practice</a></li>
-              <li><a href="/schedule">Peer Scheduling</a></li>
+              <li><Link to="/interview">Mock Interviews</Link></li>
+              <li><Link to="/live-coding">Live Coding Practice</Link></li>
+              <li><Link to="/schedule">Peer Scheduling</Link></li>
             </ul>
           </div>
           <div>
             <h3>Resources</h3>
             <ul>
-              <li><a href="/dashboard">Dashboard</a></li>
-              <li><a href="/profile">Profile</a></li>
-              <li><a href="/">Home</a></li>
+              <li><Link to="/dashboard">Dashboard</Link></li>
+              <li><Link to="/profile">Profile</Link></li>
+              <li><Link to="/">Home</Link></li>
             </ul>
           </div>
           <div>

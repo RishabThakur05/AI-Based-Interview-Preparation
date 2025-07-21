@@ -935,16 +935,54 @@ body {
 
 @media (max-width: 600px) {
   .custom-footer {
-    padding: 2rem 0 1rem 0;
+    padding: 2.5rem 0 1.5rem 0;
+    border-top: 2px solid var(--border-color);
+    box-shadow: none;
   }
   .footer-main {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 2rem;
+    text-align: center;
+    padding: 0 1rem;
+  }
+  .footer-main h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    color: var(--blue-500);
+  }
+  .footer-main ul {
+    padding: 0;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .footer-main li {
+    margin-bottom: 0.5rem;
+    width: 100%;
+  }
+  .footer-main a, .footer-main button {
+    font-size: 1rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
   }
   .footer-bottom {
     flex-direction: column;
     gap: 0.5rem;
-    font-size: 0.85rem;
+    text-align: center;
+    font-size: 0.95rem;
+    margin-top: 1.5rem;
+  }
+  .newsletter-note {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+  .footer-divider {
+    margin: 1.5rem 0 1rem 0;
   }
 }
 
