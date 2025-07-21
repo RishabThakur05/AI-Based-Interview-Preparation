@@ -34,12 +34,6 @@ const Layout = ({ children }) => {
                   </Link>
                 </li>
                 <li>
-                  <Link to="/career-coach" className={location.pathname === '/career-coach' ? 'active' : ''}>
-                    <Brain className="w-4 h-4" />
-                    AI Career Coach
-                  </Link>
-                </li>
-                <li>
                   <Link to="/schedule" className={location.pathname === '/schedule' ? 'active' : ''}>
                     <Calendar className="w-4 h-4" />
                     Schedule
@@ -96,7 +90,6 @@ const Layout = ({ children }) => {
           <div>
             <h3>Features</h3>
             <ul>
-              <li><a href="/career-coach">AI Career Coach</a></li>
               <li><a href="/interview">Mock Interviews</a></li>
               <li><a href="/live-coding">Live Coding Practice</a></li>
               <li><a href="/schedule">Peer Scheduling</a></li>

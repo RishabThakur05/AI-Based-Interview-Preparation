@@ -70,7 +70,7 @@
 // services/aiService.js
 import axios from 'axios';
 
-const API_KEY = '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'; // your OpenRouter API key
+const API_KEY = process.env.VITE_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY || process.env.OPENAI_API_KEY; // Use env variable for API key
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
 export const generateInterviewQuestions = async (role = 'software developer', difficulty = '', count = 5) => {
@@ -94,6 +94,9 @@ export const generateInterviewQuestions = async (role = 'software developer', di
     const questions = text.split('\n').filter(q => q.trim().length > 0);
     return questions;
   } catch (error) {
+    if (error.response && error.response.status === 401) {
+      console.error('401 Unauthorized: Check your OpenRouter API key in your .env file.');
+    }
     console.error('Error generating questions:', error.message);
     throw error;
   }
@@ -136,6 +139,9 @@ export const evaluateAnswer = async (question, answer) => {
     }
     return feedback;
   } catch (error) {
+    if (error.response && error.response.status === 401) {
+      console.error('401 Unauthorized: Check your OpenRouter API key in your .env file.');
+    }
     console.error('Error evaluating answer:', error.message);
     throw error;
   }

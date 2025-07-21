@@ -13,7 +13,6 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ProtectedRoute from './components/ProtectedRoute';
 import InterviewRoom from './pages/InterviewRoom.jsx';
-import CareerCoach from './pages/CareerCoach';
 
 function App() {
   return (
@@ -47,11 +46,6 @@ function App() {
                   </ProtectedRoute>
                 } />
                 <Route path="/interview-room/:roomId" element={<InterviewRoom />} />
-                <Route path="/career-coach" element={
-                  <ProtectedRoute>
-                    <CareerCoach />
-                  </ProtectedRoute>
-                } />
               </Routes>
             </Layout>
           </Router>

@@ -1,40 +1,35 @@
-import sqlite3 from 'sqlite3';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import pkg from 'pg';
+const { Pool } = pkg;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const dbPath = join(__dirname, '../database.sqlite');
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+});
 
-const db = new sqlite3.Database(dbPath);
-
-function addColumnIfNotExists(table, column, type, callback) {
-  db.get(`PRAGMA table_info(${table})`, (err, info) => {
-    if (err) return callback(err);
-    db.all(`PRAGMA table_info(${table})`, (err, columns) => {
-      if (err) return callback(err);
-      const exists = columns.some(col => col.name === column);
-      if (exists) {
-        console.log(`Column ${column} already exists in ${table}`);
-        return callback();
-      }
-      db.run(`ALTER TABLE ${table} ADD COLUMN ${column} ${type} DEFAULT 0`, callback);
-    });
-  });
+async function addColumnIfNotExists(table, column, type, defaultValue) {
+  // Check if the column exists
+  const columnExistsQuery = `
+    SELECT column_name FROM information_schema.columns 
+    WHERE table_name = $1 AND column_name = $2
+  `;
+  const res = await pool.query(columnExistsQuery, [table, column]);
+  if (res.rows.length > 0) {
+    console.log(`Column ${column} already exists in ${table}`);
+    return;
+  }
+  // Add the column
+  const alterQuery = `ALTER TABLE ${table} ADD COLUMN ${column} ${type} DEFAULT ${defaultValue}`;
+  await pool.query(alterQuery);
+  console.log(`${column} column added to ${table}`);
 }
 
-addColumnIfNotExists('scheduled_interviews', 'joined_host', 'BOOLEAN', (err) => {
-  if (err) {
-    console.error('Error adding joined_host:', err);
-  } else {
-    console.log('joined_host column ensured.');
-    addColumnIfNotExists('scheduled_interviews', 'joined_guest', 'BOOLEAN', (err2) => {
-      if (err2) {
-        console.error('Error adding joined_guest:', err2);
-      } else {
-        console.log('joined_guest column ensured.');
-      }
-      db.close();
-    });
+(async () => {
+  try {
+    await addColumnIfNotExists('scheduled_interviews', 'joined_host', 'BOOLEAN', false);
+    await addColumnIfNotExists('scheduled_interviews', 'joined_guest', 'BOOLEAN', false);
+  } catch (err) {
+    console.error('Error adding columns:', err);
+  } finally {
+    await pool.end();
   }
-}); 
+})(); 

@@ -1,9 +1,8 @@
 # InterviewAI
 
-A full-stack AI-powered interview preparation platform built with React, Node.js, and SQLite.
+A full-stack AI-powered interview preparation platform built with React, Node.js, and PostgreSQL.
 
 ## 🚀 Features
-- **AI Career Coach:** Personalized career roadmap, resume analysis, skill gap detection, and learning recommendations.
 - **Mock Interviews:** Practice technical interviews with AI-generated questions and instant feedback.
 - **Live Coding Practice:** (Optional) Solve coding problems with real-time feedback.
 - **Peer Scheduling:** Schedule and join mock interviews with peers.
@@ -13,7 +12,7 @@ A full-stack AI-powered interview preparation platform built with React, Node.js
 ## 🛠️ Tech Stack
 - **Frontend:** React, Vite, Tailwind CSS (or plain CSS)
 - **Backend:** Node.js, Express
-- **Database:** SQLite (file-based, easy to deploy)
+- **Database:** PostgreSQL (robust, scalable, production-ready)
 - **AI Integration:** OpenAI / OpenRouter API
 
 ## ⚡ Getting Started
