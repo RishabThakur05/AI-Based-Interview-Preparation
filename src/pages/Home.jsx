@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Brain, Users, Calendar, TrendingUp, Mic, MessageCircle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Home = () => {
+  const { user } = useAuth();
   return (
     <div className="fade-in">
       <section className="text-center py-20">
@@ -14,12 +16,23 @@ const Home = () => {
           for collaborative interview preparation. Transform your career prospects today.
         </p>
         <div className="flex gap-4 justify-center">
-          <Link to="/register" className="btn btn-primary btn-lg">
-            Get Started Free
-          </Link>
-          <Link to="/login" className="btn btn-outline btn-lg">
-            Sign In
-          </Link>
+          {user ? (
+            <div className="bg-white shadow-lg rounded-xl px-8 py-6 flex flex-col items-center gap-4 border border-blue-100 max-w-md mx-auto">
+              <span className="text-xl font-semibold text-blue-700">Welcome, {user.username}!</span>
+              <Link to="/dashboard" className="btn btn-primary btn-lg w-full">
+                Go to Dashboard
+              </Link>
+            </div>
+          ) : (
+            <>
+              <Link to="/register" className="btn btn-primary btn-lg">
+                Get Started Free
+              </Link>
+              <Link to="/login" className="btn btn-outline btn-lg">
+                Sign In
+              </Link>
+            </>
+          )}
         </div>
       </section>
 
