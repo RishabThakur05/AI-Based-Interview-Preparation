@@ -40,20 +40,19 @@ const Layout = ({ children }) => {
       <nav className="navbar">
         <div className="container">
           <div className="navbar-content">
-            <Link to="/" className="logo">
-              <Brain className="w-6 h-6" /> InterviewAI
-            </Link>
-
-            {/* Hamburger for mobile */}
-            <button className="navbar-hamburger" onClick={() => setDrawerOpen(true)} aria-label="Open menu">
-              <span className="hamburger-bar"></span>
-              <span className="hamburger-bar"></span>
-              <span className="hamburger-bar"></span>
-            </button>
-
+            <div className="flex items-center gap-2">
+              <Link to="/" className="logo">
+                <Brain className="w-6 h-6" /> InterviewAI
+              </Link>
+              {/* Hamburger for mobile */}
+              <button className="navbar-hamburger" onClick={() => setDrawerOpen(true)} aria-label="Open menu">
+                <span className="hamburger-bar"></span>
+                <span className="hamburger-bar"></span>
+                <span className="hamburger-bar"></span>
+              </button>
+            </div>
             {/* Regular nav links (hidden on mobile) */}
             <div className="navbar-links-desktop">{navLinks}</div>
-
             <div className="nav-actions">
               {user ? (
                 <div className="flex items-center gap-4">
