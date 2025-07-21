@@ -930,7 +930,6 @@ body {
   .footer-bottom {
     flex-direction: column;
     gap: 0.5rem;
-    text-align: center;
   }
 }
 
@@ -1040,3 +1039,89 @@ body {
   background: var(--green-50);
   color: #86efac;
 }
+
+/* --- Responsive Navbar Drawer --- */
+
+.navbar-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 201;
+}
+.hamburger-bar {
+  width: 26px;
+  height: 3px;
+  background: var(--blue-500);
+  margin: 3px 0;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+/* Hide desktop nav links on mobile, show hamburger */
+@media (max-width: 900px) {
+  .navbar-links-desktop {
+    display: none;
+  }
+  .navbar-hamburger {
+    display: flex;
+  }
+}
+
+/* Drawer overlay */
+.drawer-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.3);
+  z-index: 200;
+  transition: opacity 0.3s;
+}
+
+/* Drawer panel */
+.drawer-panel {
+  position: fixed;
+  top: 0;
+  left: -320px;
+  width: 300px;
+  height: 100vh;
+  background: var(--bg-primary);
+  box-shadow: 2px 0 16px rgba(0,0,0,0.08);
+  z-index: 202;
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  transition: left 0.3s;
+}
+.drawer-panel.open {
+  left: 0;
+}
+.drawer-close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--blue-500);
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+}
+
+.drawer-panel .nav-links {
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+@media (min-width: 901px) {
+  .drawer-panel, .drawer-overlay, .navbar-hamburger {
+    display: none !important;
+  }
+}
+
+/* --- End Responsive Navbar Drawer --- */
