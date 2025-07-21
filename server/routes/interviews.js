@@ -252,20 +252,5 @@ router.post('/scheduled/:roomId/joined', authenticateToken, async (req, res) => 
   }
 });
 
-// Career Coach assistant
-router.post('/career-coach', authenticateToken, async (req, res) => {
-  try {
-    const { question } = req.body;
-    if (!question) {
-      return res.status(400).json({ error: 'Question is required' });
-    }
-
-    const response = await generateInterviewQuestions(`Career guidance: ${question}`);
-    res.json({ answer: response });
-  } catch (error) {
-    console.error('Career Coach Error:', error);
-    res.status(500).json({ error: 'Failed to get career advice' });
-  }
-});
 
 export default router;

@@ -6,7 +6,7 @@ import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
-import aiRoutes from './routes/ai.js';
+
 import authRoutes from './routes/auth.js';
 import interviewRoutes from './routes/interviews.js';
 import userRoutes from './routes/users.js';
@@ -44,7 +44,7 @@ initializeDatabase();
 app.use('/api/auth', authRoutes);
 app.use('/api/interviews', interviewRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/ai', aiRoutes); // Fixed from /routes/ai to /api/ai
+
 
 // Socket.IO events
 io.on('connection', (socket) => {

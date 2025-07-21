@@ -21,9 +21,6 @@ Thumbs.db
 .env.local
 .env.*.local
 
-# SQLite database
-server/database.sqlite
-
 # Sensitive service files (tokens, credentials)
 server/services/token.json
 server/services/credentials.json
