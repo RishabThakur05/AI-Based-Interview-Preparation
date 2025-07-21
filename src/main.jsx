@@ -4,6 +4,9 @@ import App from './App.jsx';
 import './index.css';
 import axios from 'axios';
 
+// Set Axios base URL to deployed backend
+axios.defaults.baseURL = 'https://ai-based-interview-preparation.onrender.com';
+
 const rootElement = document.getElementById('root');
 if (rootElement) {
   createRoot(rootElement).render(
