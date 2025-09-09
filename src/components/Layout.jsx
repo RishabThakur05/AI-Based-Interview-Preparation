@@ -84,14 +84,18 @@ const Layout = ({ children }) => {
             </div>
           </div>
         </div>
-        {/* Drawer overlay */}
-        {drawerOpen && <div className="drawer-overlay" onClick={() => setDrawerOpen(false)}></div>}
-        {/* Drawer panel */}
-        <div className={`drawer-panel${drawerOpen ? ' open' : ''}`}>
-          <button className="drawer-close" onClick={() => setDrawerOpen(false)} aria-label="Close menu">&times;</button>
-          {navLinks}
-        </div>
       </nav>
+
+      {/* Mobile Drawer */}
+      {drawerOpen && (
+        <>
+          <div className="drawer-overlay" onClick={() => setDrawerOpen(false)}></div>
+          <div className="drawer-panel open">
+            <button className="drawer-close" onClick={() => setDrawerOpen(false)} aria-label="Close menu">&times;</button>
+            {navLinks}
+          </div>
+        </>
+      )}
       <main className="container py-8">
         {children}
       </main>

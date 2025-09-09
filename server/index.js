@@ -10,15 +10,25 @@ import { Server } from 'socket.io';
 import authRoutes from './routes/auth.js';
 import interviewRoutes from './routes/interviews.js';
 import userRoutes from './routes/users.js';
-import { initializeDatabase } from './database/init.js';
+import { connectDB } from './database/mongoInit.js';
 
 // Fix __dirname for ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load environment variables from .env
+// Load environment variables from multiple .env files
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
-console.log("DATABASE_URL:", process.env.DATABASE_URL); // ✅ Debug check
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+// Validate required environment variables
+if (!process.env.MONGODB_URI) {
+  console.error('❌ MONGODB_URI environment variable is required');
+  console.log('💡 Please set your MongoDB Atlas connection string in .env file');
+  process.exit(1);
+}
+
+console.log("✅ MONGODB_URI configured");
+console.log("🌐 Environment:", process.env.NODE_ENV || 'development');
 
 // Create Express app and HTTP server
 const app = express();
@@ -37,8 +47,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../dist')));
 
-// Initialize PostgreSQL database
-initializeDatabase();
+// Initialize MongoDB database
+connectDB();
 
 // API Routes
 app.use('/api/auth', authRoutes);

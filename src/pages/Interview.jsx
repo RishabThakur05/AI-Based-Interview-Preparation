@@ -105,12 +105,13 @@ const Interview = () => {
         answer: currentAnswer.trim()
       });
 
-      // Update the current question with the answer and feedback
+      // Update the current question with the answer, feedback, and correct answer
       const updatedQuestions = [...session.questions];
       updatedQuestions[currentQuestionIndex] = {
         ...updatedQuestions[currentQuestionIndex],
         answer: currentAnswer.trim(),
-        feedback: response.data.feedback
+        feedback: response.data.feedback,
+        correctAnswer: response.data.correctAnswer
       };
 
       setSession({
@@ -405,7 +406,7 @@ const Interview = () => {
         {currentQuestion.feedback && (
           <div className="feedback-card">
             <div className="mb-3">
-              <span className={`feedback-score ${currentQuestion.feedback.score < 70 ? 'low' : currentQuestion.feedback.score < 80 ? 'medium' : ''}`}>
+              <span className={`feedback-score ${currentQuestion.feedback.score < 70 ? 'low' : currentQuestion.feedback.score < 80 ? 'medium' : ''}`}> 
                 Score: {currentQuestion.feedback.score}%
               </span>
             </div>

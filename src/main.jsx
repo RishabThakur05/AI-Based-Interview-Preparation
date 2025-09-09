@@ -4,8 +4,12 @@ import App from './App.jsx';
 import './index.css';
 import axios from 'axios';
 
-// Set Axios base URL to deployed backend
-axios.defaults.baseURL = 'https://ai-based-interview-preparation.onrender.com';
+// Set Axios base URL based on environment
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
+  (import.meta.env.DEV ? 'http://localhost:3001' : 'https://ai-based-interview-preparation.onrender.com');
+
+axios.defaults.baseURL = API_BASE_URL;
+console.log('🌐 API Base URL:', API_BASE_URL);
 
 const rootElement = document.getElementById('root');
 if (rootElement) {

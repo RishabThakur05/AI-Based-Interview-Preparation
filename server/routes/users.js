@@ -1,5 +1,7 @@
 import express from 'express';
-import { pool } from '../database/init.js';
+import User from '../models/User.js';
+import UserProgress from '../models/UserProgress.js';
+import DailyChallenge from '../models/DailyChallenge.js';
 import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -8,15 +10,13 @@ const router = express.Router();
 router.get('/profile', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   try {
-    const userResult = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
-    const user = userResult.rows[0];
+    const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-    const progressResult = await pool.query('SELECT * FROM user_progress WHERE user_id = $1', [userId]);
-    const progress = progressResult.rows[0] || {};
+    const progress = await UserProgress.findOne({ user_id: userId }) || {};
     res.json({
-      id: user.id,
+      id: user._id,
       username: user.username,
       email: user.email,
       preferredPosition: user.preferred_position,
@@ -24,6 +24,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
       progress
     });
   } catch (err) {
+    console.error('Profile error:', err);
     res.status(500).json({ error: 'Database error' });
   }
 });
@@ -31,13 +32,22 @@ router.get('/profile', authenticateToken, async (req, res) => {
 // Get daily challenge
 router.get('/daily-challenge', authenticateToken, async (req, res) => {
   const userId = req.user.id;
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
   try {
-    const challengeResult = await pool.query('SELECT * FROM daily_challenges WHERE user_id = $1 AND challenge_date = $2', [userId, today]);
-    const challenge = challengeResult.rows[0];
+    const challenge = await DailyChallenge.findOne({ 
+      user_id: userId, 
+      challenge_date: { 
+        $gte: today, 
+        $lt: new Date(today.getTime() + 24 * 60 * 60 * 1000) 
+      } 
+    });
+    
     if (challenge) {
       return res.json(challenge);
     }
+    
     // Generate new daily challenge
     const challenges = [
       "What is the difference between var, let, and const in JavaScript?",
@@ -47,17 +57,22 @@ router.get('/daily-challenge', authenticateToken, async (req, res) => {
       "Explain the time complexity of common sorting algorithms."
     ];
     const randomChallenge = challenges[Math.floor(Math.random() * challenges.length)];
-    const insertResult = await pool.query(
-      'INSERT INTO daily_challenges (user_id, challenge_date, question) VALUES ($1, $2, $3) RETURNING id',
-      [userId, today, randomChallenge]
-    );
+    
+    const newChallenge = new DailyChallenge({
+      user_id: userId,
+      challenge_date: today,
+      question: randomChallenge
+    });
+    await newChallenge.save();
+    
     res.json({
-      id: insertResult.rows[0].id,
+      id: newChallenge._id,
       challenge_date: today,
       question: randomChallenge,
       completed: false
     });
   } catch (err) {
+    console.error('Daily challenge error:', err);
     res.status(500).json({ error: 'Error creating challenge' });
   }
 });
@@ -67,12 +82,13 @@ router.post('/daily-challenge', authenticateToken, async (req, res) => {
   const { challengeId, answer } = req.body;
   const userId = req.user.id;
   try {
-    await pool.query(
-      'UPDATE daily_challenges SET answer = $1, score = 80, completed = TRUE WHERE id = $2 AND user_id = $3',
-      [answer, challengeId, userId]
+    await DailyChallenge.findOneAndUpdate(
+      { _id: challengeId, user_id: userId },
+      { answer, score: 80, completed: true }
     );
     res.json({ message: 'Challenge completed!', score: 80 });
   } catch (err) {
+    console.error('Submit challenge error:', err);
     res.status(500).json({ error: 'Error submitting challenge' });
   }
 });
