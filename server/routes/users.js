@@ -8,13 +8,19 @@ const router = express.Router();
 
 // Get user profile
 router.get('/profile', authenticateToken, async (req, res) => {
-  const userId = req.user.id;
+  const userId = req.user.id || req.user._id || req.user.userId;
+  console.log('Profile request for user:', userId, 'Full user object:', req.user);
+  
   try {
     const user = await User.findById(userId);
     if (!user) {
+      console.log('User not found in database:', userId);
       return res.status(404).json({ error: 'User not found' });
     }
+    
+    console.log('User found:', user.username, user.email);
     const progress = await UserProgress.findOne({ user_id: userId }) || {};
+    
     res.json({
       id: user._id,
       username: user.username,
@@ -91,6 +97,15 @@ router.post('/daily-challenge', authenticateToken, async (req, res) => {
     console.error('Submit challenge error:', err);
     res.status(500).json({ error: 'Error submitting challenge' });
   }
+});
+
+// Test authentication endpoint
+router.get('/test-auth', authenticateToken, async (req, res) => {
+  res.json({
+    message: 'Authentication working',
+    user: req.user,
+    timestamp: new Date().toISOString()
+  });
 });
 
 export default router;
