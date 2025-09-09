@@ -6,10 +6,10 @@ import axios from 'axios';
 
 // Set Axios base URL based on environment
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
-  (import.meta.env.DEV ? 'http://localhost:3001' : 'https://ai-based-interview-preparation.onrender.com');
+  (import.meta.env.DEV ? 'http://localhost:3001' : '');
 
 axios.defaults.baseURL = API_BASE_URL;
-console.log('🌐 API Base URL:', API_BASE_URL);
+console.log('🌐 API Base URL:', API_BASE_URL || 'Same origin');
 
 const rootElement = document.getElementById('root');
 if (rootElement) {

@@ -43,9 +43,27 @@ const io = new Server(server, {
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://your-app-name.onrender.com'] // Replace with your actual Render URL
+    : ['http://localhost:5173', 'http://localhost:3000'],
+  credentials: true
+}));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../dist')));
+
+// Serve static files in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../dist')));
+  
+  // Handle React Router (return `index.html` for non-API routes)
+  app.get('*', (req, res) => {
+    // Don't serve index.html for API routes
+    if (req.path.startsWith('/api/')) {
+      return res.status(404).json({ error: 'API route not found' });
+    }
+    res.sendFile(path.join(__dirname, '../dist/index.html'));
+  });
+}
 
 // Initialize MongoDB database
 connectDB();
@@ -55,6 +73,14 @@ app.use('/api/auth', authRoutes);
 app.use('/api/interviews', interviewRoutes);
 app.use('/api/users', userRoutes);
 
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
 
 // Socket.IO events
 io.on('connection', (socket) => {
@@ -81,6 +107,9 @@ io.on('connection', (socket) => {
 
 // Start server
 const PORT = process.env.PORT || 3001;
-server.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
+const HOST = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
+
+server.listen(PORT, HOST, () => {
+  console.log(`✅ Server running on ${HOST}:${PORT}`);
+  console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
 });

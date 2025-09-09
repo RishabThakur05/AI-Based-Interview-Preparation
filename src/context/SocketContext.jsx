@@ -20,9 +20,9 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     if (token) {
       // Use environment-based Socket.IO URL
-      const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 
-        (import.meta.env.DEV ? 'http://localhost:3001' : 'https://ai-based-interview-preparation.onrender.com');
-      
+      const SOCKET_URL = import.meta.env.VITE_SOCKET_URL ||
+        (import.meta.env.DEV ? 'http://localhost:3001' : window.location.origin);
+
       const newSocket = io(SOCKET_URL, {
         auth: { token }
       });
