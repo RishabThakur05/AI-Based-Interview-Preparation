@@ -7,35 +7,42 @@ Go to your Render service dashboard and add these environment variables:
 ### Required Variables:
 ```
 NODE_ENV=production
-MONGODB_URI=mongodb+srv://rishab12:ThakurRishab@cluster0.u5ngnja.mongodb.net/interview-app?retryWrites=true&w=majority
-JWT_SECRET=your-super-secret-jwt-key-for-interview-app-2024
+MONGODB_URI=your-mongodb-atlas-connection-string
+JWT_SECRET=your-secure-jwt-secret-key
 ```
 
 ### Optional Variables (for email functionality):
 ```
-EMAIL_USER=dikshabhandari665@gmail.com
-EMAIL_PASS=fubm qzhj gtxn lnqu
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
 ```
 
 ### Optional Variables (for AI features):
 ```
-OPENROUTER_API_KEY=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
-GEMINI_API_KEY=AIzaSyBfVWZdLhWIdMRpQwwQuEMSYkAChCAea98
+OPENROUTER_API_KEY=your-openrouter-api-key
+GEMINI_API_KEY=your-gemini-api-key
 ```
 
 ## Deployment Steps:
 
-1. **Push your code to GitHub** (make sure all changes are committed)
+1. **Verify build setup locally:**
+   ```bash
+   node verify-build.js
+   npm run build
+   ```
 
-2. **In Render Dashboard:**
-   - Build Command: `npm install && npm run build`
+2. **Push your code to GitHub** (make sure all changes are committed)
+
+3. **In Render Dashboard:**
+   - Build Command: `npm ci && npm run build`
    - Start Command: `npm start`
+   - Node Version: `22.16.0` (or use .nvmrc)
    - Add all environment variables listed above
 
-3. **Update CORS origin** in `server/index.js`:
+4. **Update CORS origin** in `server/index.js`:
    - Replace `'https://your-app-name.onrender.com'` with your actual Render URL
 
-4. **Deploy and test**
+5. **Deploy and test**
 
 ## Troubleshooting:
 
