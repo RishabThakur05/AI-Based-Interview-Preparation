@@ -133,9 +133,13 @@ const getMockQuestions = (position, difficulty, count) => {
 
 export const generateInterviewQuestions = async (role = 'software developer', difficulty = '', count = 5) => {
   // Try AI service first, fallback to mock if it fails
+  console.log('Generating interview questions for:', { role, difficulty, count });
+  console.log('API_KEY available:', !!API_KEY);
+  
   if (API_KEY) {
     try {
-      const response = await axios.post(API_URL, {
+      console.log('Attempting to call OpenRouter API...');
+      const payload = {
         model: 'openai/gpt-3.5-turbo',
         messages: [
           {
@@ -143,19 +147,28 @@ export const generateInterviewQuestions = async (role = 'software developer', di
             content: `Generate exactly ${count} unique technical interview questions for a ${role} role${difficulty ? ' at ' + difficulty + ' difficulty' : ''}. Number each question. Do not include any explanations or extra text. Only output the questions, one per line.`,
           },
         ],
-      }, {
+      };
+      
+      console.log('API request payload:', JSON.stringify(payload));
+      
+      const response = await axios.post(API_URL, payload, {
         headers: {
           'Authorization': `Bearer ${API_KEY}`,
           'Content-Type': 'application/json',
         },
       });
 
+      console.log('API response received:', response.status);
       const text = response.data.choices[0].message.content;
       const questions = text.split('\n').filter(q => q.trim().length > 0);
+      console.log(`Generated ${questions.length} questions successfully`);
       return questions;
     } catch (error) {
-      console.warn('AI service failed, using mock questions:', error.message);
+      console.error('AI service failed, detailed error:', error);
+      console.warn('Using mock questions due to API failure:', error.message);
     }
+  } else {
+    console.warn('No API key available, defaulting to mock questions');
   }
   
   // Fallback to mock questions

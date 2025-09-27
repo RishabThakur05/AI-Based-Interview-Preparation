@@ -14,9 +14,41 @@ const router = express.Router();
 // Generate interview questions
 router.post('/generate', authenticateToken, async (req, res) => {
   try {
+    console.log('Received interview generation request:', req.body);
     const { position, difficulty, questionCount = 5 } = req.body;
     const userId = req.user.id;
+    
+    console.log(`Generating questions for user ${userId}: ${position}, ${difficulty}, count: ${questionCount}`);
+    
+    // Generate questions with AI or fallback
     const questions = await generateInterviewQuestions(position, difficulty, questionCount);
+    console.log(`Generated ${questions.length} questions`);
+    
+    if (!questions || questions.length === 0) {
+      console.warn('No questions were generated, returning mock questions');
+      // If no questions were generated, use mock questions
+      const mockQuestions = [
+        "What is the difference between let, const, and var in JavaScript?",
+        "Explain how React's virtual DOM works.",
+        "What are closures in JavaScript?",
+        "Describe the box model in CSS.",
+        "What is the difference between synchronous and asynchronous code?"
+      ];
+      
+      // Save interview session with mock questions
+      const session = new InterviewSession({
+        user_id: userId,
+        position,
+        difficulty,
+        questions: mockQuestions
+      });
+      await session.save();
+      
+      return res.json({
+        sessionId: session._id,
+        questions: mockQuestions.map((q, index) => ({ id: index + 1, question: q, answer: null }))
+      });
+    }
     
     // Save interview session
     const session = new InterviewSession({
@@ -26,6 +58,7 @@ router.post('/generate', authenticateToken, async (req, res) => {
       questions
     });
     await session.save();
+    console.log(`Saved interview session: ${session._id}`);
     
     res.json({
       sessionId: session._id,
@@ -33,7 +66,12 @@ router.post('/generate', authenticateToken, async (req, res) => {
     });
   } catch (error) {
     console.error('Generate interview error:', error);
-    res.status(500).json({ error: 'Error generating questions' });
+    // Return a more detailed error message
+    res.status(500).json({ 
+      error: 'Error generating questions', 
+      message: error.message,
+      stack: process.env.NODE_ENV === 'production' ? null : error.stack 
+    });
   }
 });
 
