@@ -126,23 +126,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="card">
-          <div className="card-header">
-            <h2 className="card-title">
-              <Calendar className="w-5 h-5" />
-              Schedule Interview
-            </h2>
-          </div>
-          <div className="card-content">
-            <p className="text-gray-600 mb-4">
-              Schedule mock interviews with peers for realistic practice sessions.
-            </p>
-            <Link to="/schedule" className="btn btn-secondary">
-              <Calendar className="w-4 h-4" />
-              View Calendar
-            </Link>
-          </div>
-        </div>
+        {/* Schedule Interview card removed as requested */}
 
         <div className="card">
           <div className="card-header">

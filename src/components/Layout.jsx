@@ -23,11 +23,6 @@ const Layout = ({ children }) => {
         </Link>
       </li>
       <li>
-        <Link to="/schedule" className={location.pathname === '/schedule' ? 'active' : ''} onClick={() => setDrawerOpen(false)}>
-          <Calendar className="w-4 h-4" /> Schedule
-        </Link>
-      </li>
-      <li>
         <Link to="/profile" className={location.pathname === '/profile' ? 'active' : ''} onClick={() => setDrawerOpen(false)}>
           <User className="w-4 h-4" /> Profile
         </Link>
